@@ -1,0 +1,95 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d')
+
+            document.addEventListener('keydown', KeyPressed);
+            document.addEventListener('keyup', KeyReleased);
+
+            setInterval(mainloop, 1000 / 50)
+        }
+
+        //ball vars
+        var playerXpos = 0;
+        var playerYpos = 100;
+        const PLAYER_SIZE = 23;
+        var playerXspeed = 5;
+
+        var spaceKeyPressed = false;
+        var upKeyPressed = false;
+
+        const SPACE_KEY = 32;
+        const UP_KEY = 38;
+
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'skyblue'); //bg 
+            colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
+            playerMove();
+
+        }
+        var username = '';
+
+        while (username == '' || username == null) {
+            username = prompt('what is your name');
+
+        }
+        var difficulty = prompt('how hard do you want it', '1');
+        difficulty = Number(difficulty) //makes a number
+        var gamespeed = 0;
+
+        if (difficulty == 1) {
+            gamespeed = 2
+        } else {
+            gamespeed = 200;
+        }
+
+
+
+        function KeyPressed(evt) {
+            if (evt.keyCode == SPACE_KEY) {
+                spaceKeyPressed = true;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPressed = true;
+            }
+        }
+
+        function KeyReleased(evt) {
+            if (evt.keyCode == SPACE_KEY)
+                spaceKeyPressed = false;
+
+            if (evt.keyCode == UP_KEY) {
+                upKeyPressed = false;
+            }
+        }
+
+        var playerYspeed = 6;
+        var yVel = 0;
+        var rate = 0.4;
+        var jumpPower = -8;
+
+        function playerMove() {
+            yVel += rate;
+
+            playerYpos += yVel;
+
+            if (spaceKeyPressed) {
+                yVel = jumpPower;
+
+            }
+        }
+
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+
+    </script>
+</body>
