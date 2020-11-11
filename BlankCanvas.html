@@ -34,11 +34,19 @@
         const PIPE_WIDTH = 40;
         var pipeHeight = 200;
         var pipeXspeed = 5;
+        var pipecount = 0;
 
         var settingUp = true;
 
         var username = '';
-        var score = 0
+
+        var score = 0;
+        var totalpipes = 10;
+        var pipes = [];
+
+
+
+        var startingPos = true;
 
         while (username == '' || username == null) {
             username = prompt('what is your name');
@@ -63,13 +71,22 @@
                     setUp();
                     settingUp = false;
                 }
-                colorRect(pipeXpos, pipeYpos, PIPE_WIDTH, pipeHeight, 'green'); //pipe 
+
                 colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
                 colorText(username, 50, 50, '20px Arial', 'black'); //lose
-                colorText(score, 50, 100, '20px Arial', 'black')
-                playerMove();
+                colorText(score, 50, 100, '20px Arial', 'black') //score
+                
+                if (startingPos) {
+                    for (i = 0; i < totalpipes; i++)
+                        makepipe();
+                    startingPos = false;
 
+                }
+
+                playerMove();
+                
                 pipeMove();
+                drawpipe();
             } else {
                 colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg 
                 colorText('you lose ' + username, 50, 50, '20px Arial', 'red'); //lose
@@ -118,17 +135,58 @@
         }
 
         function pipeMove() {
-            pipeXpos -= pipeXspeed;
+            pipes.forEach(function(pipe){
+                
+            
+            pipe.pipeXpos -= pipe.pipeXspeed;
 
-            if (pipeXpos + PIPE_WIDTH < 0) {
-                pipeXpos = canvas.width
-                score++ 
+            if ( pipe.pipeXpos + pipe.PIPE_WIDTH < 0) {
+                pipe.pipeXpos = canvas.width
+                score++
             }
 
-            if (playerXpos + PLAYER_SIZE > pipeXpos && playerXpos < pipeXpos + PIPE_WIDTH && playerYpos + PLAYER_SIZE > pipeYpos && playerYpos < pipeYpos + pipeHeight) {
+            if (playerXpos + PLAYER_SIZE > pipe.pipeXpos && playerXpos < pipe.pipeXpos + pipe.PIPE_WIDTH && playerYpos + PLAYER_SIZE > pipe.pipeYpos && playerYpos < pipe.pipeYpos + pipe.pipeHeight) {
                 gameRun = false;
             }
+            });
+            
         }
+
+
+
+
+        
+
+        var pipes = [];
+
+        function makepipe() {
+            const PIPE_WIDTH = 40;
+            var pipeXpos = canvas.width + PIPE_WIDTH * pipecount;
+            var pipeHeight = Math.floor(Math.random() * (300 - 150)) + 150;
+            var pipeYpos = Math.floor(Math.random() * (canvas.width - pipeHeight));
+            var pipeXspeed = Math.floor(Math.random() * (6 - 2)) + 2;
+            pipecount++
+
+            var pipe = {
+                pipeXpos: pipeXpos,
+                pipeYpos: pipeYpos,
+                PIPE_WIDTH: PIPE_WIDTH,
+                pipeHeight: pipeHeight,
+                pipeXspeed: pipeXspeed
+            }
+            pipes.push(pipe);
+        }
+
+        function drawpipe() {
+            pipes.forEach(function(pipe, i) {
+                colorRect(pipe.pipeXpos, pipe.pipeYpos, pipe.PIPE_WIDTH, pipe.pipeHeight, 'green')
+            });
+        }
+
+
+
+
+
 
 
         function colorRect(x, y, w, h, c) {
