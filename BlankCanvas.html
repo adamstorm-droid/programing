@@ -28,14 +28,15 @@
         const UP_KEY = 38;
 
         var gameRun = true;
+        
+        var pipeXpos = 0;
+        var pipeYpos = 0;
+        const PIPE_WIDTH = 40;
+        var pipeHeight = 200;
+        var pipeXspeed = 5;
+        
+        var settingUp = true;
 
-        function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'skyblue'); //bg 
-            colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
-            colorText('you lose', 50, 50, '20px Arial', 'black'); //lose
-            playerMove()
-
-        }
         var username = '';
 
         while (username == '' || username == null) {
@@ -50,6 +51,32 @@
             gamespeed = 2
         } else {
             gamespeed = 1.5;
+        }
+        
+        
+        function mainloop() {
+            if(gameRun){
+               
+            colorRect(0, 0, canvas.width, canvas.height, 'skyblue'); //bg 
+            if(settingUp){
+                setUp();
+                settingUp = false;
+            }
+            colorRect(pipeXpos, pipeYpos, PIPE_WIDTH, pipeHeight, 'green');//pipe 
+            colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
+            colorText(username, 50, 50, '20px Arial', 'black'); //lose
+            playerMove();
+
+            pipeMove();
+            } else {
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg 
+            colorText('you lose ' + username, 50, 50, '20px Arial', 'red'); //lose
+                
+            }
+        }
+        
+        function setUp(){
+            pipeXpos = canvas.width - PIPE_WIDTH;
         }
 
         function KeyPressed(evt) {
@@ -85,6 +112,18 @@
             if (spaceKeyPressed) {
                 yVel = jumpPower;
 
+            }
+        }
+        
+        function pipeMove(){
+            pipeXpos -= pipeXspeed;
+            
+            if(pipeXpos + PIPE_WIDTH < 0){
+               pipeXpos = canvas.width
+            }
+            
+            if(playerXpos + PLAYER_SIZE > pipeXpos && playerXpos < pipeXpos + PIPE_WIDTH && playerYpos + PLAYER_SIZE > pipeYpos && playerYpos < pipeYpos + pipeHeight){
+               gameRun = false;
             }
         }
 
