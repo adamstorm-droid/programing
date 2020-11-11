@@ -27,10 +27,13 @@
         const SPACE_KEY = 32;
         const UP_KEY = 38;
 
+        var gameRun = true;
+
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'skyblue'); //bg 
             colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
-            playerMove();
+            colorText('you lose', 50, 50, '20px Arial', 'black'); //lose
+            playerMove()
 
         }
         var username = '';
@@ -46,10 +49,8 @@
         if (difficulty == 1) {
             gamespeed = 2
         } else {
-            gamespeed = 200;
+            gamespeed = 1.5;
         }
-
-
 
         function KeyPressed(evt) {
             if (evt.keyCode == SPACE_KEY) {
@@ -69,15 +70,17 @@
             }
         }
 
-        var playerYspeed = 6;
+        var playerYspeed = 4;
         var yVel = 0;
-        var rate = 0.4;
-        var jumpPower = -8;
+        var rate = 0.2;
+        var jumpPower = -8; //up force
 
         function playerMove() {
             yVel += rate;
-
             playerYpos += yVel;
+            if (playerYpos + PLAYER_SIZE > canvas.height) {
+                playerYpos = canvas.height - PLAYER_SIZE;
+            }
 
             if (spaceKeyPressed) {
                 yVel = jumpPower;
@@ -89,6 +92,12 @@
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
+        }
+
+        function colorText(msg, x, y, f, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.font = f;
+            canvasContext.fillText(msg, x, y)
         }
 
     </script>
