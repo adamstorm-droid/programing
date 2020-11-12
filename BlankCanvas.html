@@ -52,14 +52,24 @@
             username = prompt('what is your name');
 
         }
-        var difficulty = prompt('how hard do you want it', '1');
+        var difficulty = prompt('how hard do you want it', '1', '2', '3');
         difficulty = Number(difficulty) //makes a number
         var gamespeed = 0;
 
         if (difficulty == 1) {
             gamespeed = 2
+            pipecount = 10
+        }
+        if (difficulty == 2) {
+            gamespeed = 3
+            pipecount = 20
+        }
+        if (difficulty == 3) {
+            gamespeed = 4
+            pipecount = 30
         } else {
-            gamespeed = 1.5;
+            gamespeed = 2;
+            pipecount = 10
         }
 
 
@@ -75,7 +85,7 @@
                 colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'yellow'); //sprite color
                 colorText(username, 50, 50, '20px Arial', 'black'); //lose
                 colorText(score, 50, 100, '20px Arial', 'black') //score
-                
+
                 if (startingPos) {
                     for (i = 0; i < totalpipes; i++)
                         makepipe();
@@ -84,7 +94,7 @@
                 }
 
                 playerMove();
-                
+
                 pipeMove();
                 drawpipe();
             } else {
@@ -126,36 +136,41 @@
             playerYpos += yVel;
             if (playerYpos + PLAYER_SIZE > canvas.height) {
                 playerYpos = canvas.height - PLAYER_SIZE;
+                yVel = jumpPower;
             }
 
             if (spaceKeyPressed) {
                 yVel = jumpPower;
 
             }
+            if (playerYpos < 0) {
+                playerYpos = 0;
+                yVel = 0;
+            }
         }
 
         function pipeMove() {
-            pipes.forEach(function(pipe){
-                
-            
-            pipe.pipeXpos -= pipe.pipeXspeed;
+            pipes.forEach(function(pipe) {
 
-            if ( pipe.pipeXpos + pipe.PIPE_WIDTH < 0) {
-                pipe.pipeXpos = canvas.width
-                score++
-            }
 
-            if (playerXpos + PLAYER_SIZE > pipe.pipeXpos && playerXpos < pipe.pipeXpos + pipe.PIPE_WIDTH && playerYpos + PLAYER_SIZE > pipe.pipeYpos && playerYpos < pipe.pipeYpos + pipe.pipeHeight) {
-                gameRun = false;
-            }
+                pipe.pipeXpos -= pipe.pipeXspeed;
+
+                if (pipe.pipeXpos + pipe.PIPE_WIDTH < 0) {
+                    pipe.pipeXpos = canvas.width
+                    score++
+                }
+
+                if (playerXpos + PLAYER_SIZE > pipe.pipeXpos && playerXpos < pipe.pipeXpos + pipe.PIPE_WIDTH && playerYpos + PLAYER_SIZE > pipe.pipeYpos && playerYpos < pipe.pipeYpos + pipe.pipeHeight) {
+                    gameRun = false;
+                }
             });
-            
+
         }
 
 
 
 
-        
+
 
         var pipes = [];
 
